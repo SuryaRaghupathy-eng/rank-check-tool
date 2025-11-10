@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Download, FileSpreadsheet } from 'lucide-react';
+import { CheckCircle2, Download } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface ResultsSectionProps {
@@ -51,8 +51,8 @@ export default function ResultsSection({
           <h3 className="text-sm font-medium text-foreground mb-3">Download Results</h3>
           <div className="flex flex-wrap gap-3">
             <Button onClick={onDownloadCSV} data-testid="button-download-csv">
-              <FileSpreadsheet className="w-4 h-4 mr-2" />
-              CSV
+              <Download className="w-4 h-4 mr-2" />
+              All Data
             </Button>
             {onDownloadMatches && (
               <Button onClick={onDownloadMatches} data-testid="button-download-matches">
