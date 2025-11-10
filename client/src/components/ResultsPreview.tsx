@@ -21,12 +21,9 @@ export default function ResultsPreview({ data, totalRows }: ResultsPreviewProps)
   const [isExpanded, setIsExpanded] = useState(false);
   
   const displayData = isExpanded ? data : data.slice(0, 5);
-  const columns = data.length > 0 ? Object.keys(data[0]) : [];
   
-  // Limit columns to show only the most relevant ones
-  const relevantColumns = columns.filter(col => 
-    ['title', 'address', 'rating', 'category', 'query', 'brand', 'brand_match', 'query_result_number'].includes(col)
-  ).slice(0, 6);
+  // Show only Brand, Branch, and Ranking Position
+  const relevantColumns = ['brand', 'branch', 'query_result_number'];
 
   return (
     <Card data-testid="card-preview">
@@ -63,7 +60,8 @@ export default function ResultsPreview({ data, totalRows }: ResultsPreviewProps)
               <TableRow>
                 {relevantColumns.map((column) => (
                   <TableHead key={column} className="font-semibold whitespace-nowrap">
-                    {column.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    {column === 'query_result_number' ? 'Ranking Position' : 
+                     column.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                   </TableHead>
                 ))}
               </TableRow>
@@ -73,19 +71,9 @@ export default function ResultsPreview({ data, totalRows }: ResultsPreviewProps)
                 <TableRow key={i}>
                   {relevantColumns.map((column) => (
                     <TableCell key={column} className="text-sm">
-                      {column === 'brand_match' ? (
-                        <Badge variant={row[column] ? 'default' : 'secondary'} className="text-xs">
-                          {row[column] ? 'Match' : 'No Match'}
-                        </Badge>
-                      ) : column === 'rating' && row[column] ? (
-                        <span className="flex items-center gap-1">
-                          ⭐ {row[column]}
-                        </span>
-                      ) : (
-                        <span className="max-w-xs truncate block" title={String(row[column] || '')}>
-                          {String(row[column] || '-')}
-                        </span>
-                      )}
+                      <span className="max-w-xs truncate block" title={String(row[column] || '')}>
+                        {String(row[column] || '-')}
+                      </span>
                     </TableCell>
                   ))}
                 </TableRow>
