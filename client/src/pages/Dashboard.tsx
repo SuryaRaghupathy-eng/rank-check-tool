@@ -246,8 +246,6 @@ dentists in manchester,Bright Smile,Manchester`;
                   queriesProcessed={results.queries}
                   placesFound={results.places}
                   onDownloadCSV={handleDownloadCSV}
-                  onDownloadJSON={handleDownloadJSON}
-                  onDownloadExcel={handleDownloadExcel}
                   onDownloadMatches={handleDownloadMatches}
                 />
                 

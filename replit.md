@@ -15,6 +15,7 @@ The application is designed with a clean, productivity-focused interface inspire
 - Set up SERPER_API_KEY environment secret for Google Places API integration
 - Configured deployment settings for autoscale (production-ready)
 - Server running on 0.0.0.0:5000 with Vite middleware integration
+- Removed JSON and Excel export buttons (only CSV and Matches Only remain)
 - All features tested and working: CSV upload, processing, and export functionality
 
 **January 6, 2025 - Backend Integration & Migration:**
@@ -62,7 +63,7 @@ Preferred communication style: Simple, everyday language.
 - File preview with data validation
 - Real-time processing status with detailed statistics
 - Results preview with expandable data table
-- Multi-format export (CSV, JSON, Excel, matches-only)
+- Export options: CSV (full results) and Matches Only (brand matches)
 - Processing history with download capabilities
 - Theme toggle (light/dark mode)
 - Responsive design for mobile and desktop

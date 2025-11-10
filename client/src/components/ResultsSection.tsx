@@ -1,14 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle2, Download, FileJson, FileSpreadsheet, FileSpreadsheetIcon } from 'lucide-react';
+import { CheckCircle2, Download, FileSpreadsheet } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 interface ResultsSectionProps {
   queriesProcessed: number;
   placesFound: number;
   onDownloadCSV: () => void;
-  onDownloadJSON: () => void;
-  onDownloadExcel: () => void;
   onDownloadMatches?: () => void;
 }
 
@@ -16,8 +14,6 @@ export default function ResultsSection({
   queriesProcessed,
   placesFound,
   onDownloadCSV,
-  onDownloadJSON,
-  onDownloadExcel,
   onDownloadMatches,
 }: ResultsSectionProps) {
   return (
@@ -57,14 +53,6 @@ export default function ResultsSection({
             <Button onClick={onDownloadCSV} data-testid="button-download-csv">
               <FileSpreadsheet className="w-4 h-4 mr-2" />
               CSV
-            </Button>
-            <Button onClick={onDownloadJSON} data-testid="button-download-json">
-              <FileJson className="w-4 h-4 mr-2" />
-              JSON
-            </Button>
-            <Button onClick={onDownloadExcel} data-testid="button-download-excel">
-              <FileSpreadsheetIcon className="w-4 h-4 mr-2" />
-              Excel
             </Button>
             {onDownloadMatches && (
               <Button onClick={onDownloadMatches} data-testid="button-download-matches">
