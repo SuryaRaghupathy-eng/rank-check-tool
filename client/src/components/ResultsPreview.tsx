@@ -22,8 +22,8 @@ export default function ResultsPreview({ data, totalRows }: ResultsPreviewProps)
   
   const displayData = isExpanded ? data : data.slice(0, 5);
   
-  // Show only Brand, Branch, and Ranking Position
-  const relevantColumns = ['brand', 'branch', 'query_result_number'];
+  // Show only Title, Brand, and Branch (columns B, L, O)
+  const relevantColumns = ['title', 'brand', 'branch'];
 
   return (
     <Card data-testid="card-preview">
@@ -60,8 +60,7 @@ export default function ResultsPreview({ data, totalRows }: ResultsPreviewProps)
               <TableRow>
                 {relevantColumns.map((column) => (
                   <TableHead key={column} className="font-semibold whitespace-nowrap">
-                    {column === 'query_result_number' ? 'Ranking Position' : 
-                     column.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    {column.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                   </TableHead>
                 ))}
               </TableRow>
