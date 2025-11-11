@@ -118,7 +118,7 @@ export default function FileUploadZone({ onFileSelect, selectedFile, onRemove }:
         />
         <label htmlFor="file-upload">
           <Button asChild data-testid="button-browse">
-            <span>Browse Files</span>
+            <span>Upload File</span>
           </Button>
         </label>
       </div>
