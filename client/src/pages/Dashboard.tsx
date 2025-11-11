@@ -94,7 +94,7 @@ export default function Dashboard() {
       });
       
       setFullResultsData(result.data.allPlaces);
-      setResultsData(result.data.allPlaces.slice(0, 100));
+      setResultsData(result.data.brandMatches.slice(0, 100));
       
       setHistory(prev => [{
         id: Date.now().toString(),
