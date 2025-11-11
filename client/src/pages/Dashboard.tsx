@@ -161,12 +161,14 @@ export default function Dashboard() {
     const matches = fullResultsData.filter(r => r.brand_match);
     if (matches.length === 0) return;
     
-    const headers = Object.keys(matches[0]).join(',');
-    const rows = matches.map(row => 
-      Object.values(row).map(val => 
+    const allHeaders = Object.keys(matches[0]);
+    const headers = allHeaders.slice(1).join(',');
+    const rows = matches.map(row => {
+      const values = Object.values(row);
+      return values.slice(1).map(val => 
         typeof val === 'string' && val.includes(',') ? `"${val}"` : val
-      ).join(',')
-    );
+      ).join(',');
+    });
     const csv = [headers, ...rows].join('\n');
     
     const blob = new Blob([csv], { type: 'text/csv' });
