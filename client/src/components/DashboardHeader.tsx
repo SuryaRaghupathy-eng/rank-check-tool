@@ -12,12 +12,7 @@ export default function DashboardHeader() {
   return (
     <header className="h-16 border-b border-border bg-background sticky top-0 z-50">
       <div className="h-full max-w-4xl mx-auto px-4 sm:px-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <img src={logo} alt="Nurture Logo" className="h-8" />
-          <h1 className="text-xl font-semibold text-foreground" data-testid="text-app-title">
-            Google Local Rank Checker
-          </h1>
-        </div>
+        <img src={logo} alt="Nurture Logo" className="h-8" />
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Popover>
