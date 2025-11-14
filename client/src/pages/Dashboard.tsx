@@ -213,9 +213,6 @@ dentists in manchester,Bright Smile,Manchester`;
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="space-y-8">
           <div className="text-center space-y-4">
-            <div className="flex justify-center">
-              <img src={logo} alt="Nurture Logo" className="h-12" />
-            </div>
             <h2 className="text-3xl font-semibold text-foreground">
               Google Local Rank Checker
             </h2>
