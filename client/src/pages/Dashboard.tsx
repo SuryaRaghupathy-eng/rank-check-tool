@@ -165,7 +165,10 @@ export default function Dashboard() {
     
     const allHeaders = Object.keys(matches[0]);
     const filteredHeaders = allHeaders.filter(h => !columnsToExclude.includes(h));
-    const headers = filteredHeaders.join(',');
+    
+    const displayHeaders = filteredHeaders.map(h => 
+      h === 'query_result_number' ? 'local_ranking' : h
+    ).join(',');
     
     const rows = matches.map(row => {
       return filteredHeaders.map(header => {
@@ -173,7 +176,7 @@ export default function Dashboard() {
         return typeof val === 'string' && val.includes(',') ? `"${val}"` : val;
       }).join(',');
     });
-    const csv = [headers, ...rows].join('\n');
+    const csv = [displayHeaders, ...rows].join('\n');
     
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
