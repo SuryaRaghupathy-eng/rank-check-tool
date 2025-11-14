@@ -8,6 +8,7 @@ interface ResultsSectionProps {
   placesFound: number;
   onDownloadCSV: () => void;
   onDownloadMatches?: () => void;
+  onProcessAnother?: () => void;
 }
 
 export default function ResultsSection({
@@ -15,6 +16,7 @@ export default function ResultsSection({
   placesFound,
   onDownloadCSV,
   onDownloadMatches,
+  onProcessAnother,
 }: ResultsSectionProps) {
   return (
     <Card data-testid="card-results">
@@ -43,6 +45,15 @@ export default function ResultsSection({
               <Button onClick={onDownloadMatches} data-testid="button-download-matches">
                 <Download className="w-4 h-4 mr-2" />
                 Matches Only
+              </Button>
+            )}
+            {onProcessAnother && (
+              <Button
+                variant="secondary"
+                onClick={onProcessAnother}
+                data-testid="button-process-another"
+              >
+                Process Another File
               </Button>
             )}
           </div>

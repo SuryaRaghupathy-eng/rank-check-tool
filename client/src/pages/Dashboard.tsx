@@ -248,21 +248,12 @@ dentists in manchester,Bright Smile,Manchester`;
 
             {state === 'complete' && (
               <div className="space-y-6">
-                <div className="text-center">
-                  <Button
-                    variant="secondary"
-                    onClick={handleRemove}
-                    data-testid="button-process-another"
-                  >
-                    Process Another File
-                  </Button>
-                </div>
-
                 <ResultsSection
                   queriesProcessed={results.queries}
                   placesFound={results.places}
                   onDownloadCSV={handleDownloadCSV}
                   onDownloadMatches={handleDownloadMatches}
+                  onProcessAnother={handleRemove}
                 />
                 
                 {resultsData.length > 0 && (
