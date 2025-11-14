@@ -8,6 +8,8 @@ import ResultsPreview from '@/components/ResultsPreview';
 import DetailedErrorCard from '@/components/DetailedErrorCard';
 import ProcessingHistory from '@/components/ProcessingHistory';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { COUNTRIES } from '@/lib/countries';
 import logo from '@assets/images-removebg-preview_1762837081677.png';
 
 type ProcessingState = 'idle' | 'previewing' | 'processing' | 'complete' | 'error';
@@ -40,6 +42,7 @@ export default function Dashboard() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [resultsData, setResultsData] = useState<any[]>([]);
   const [fullResultsData, setFullResultsData] = useState<any[]>([]);
+  const [selectedCountry, setSelectedCountry] = useState<string>('gb');
 
   const handleFileSelect = useCallback((file: File) => {
     setSelectedFile(file);
@@ -73,6 +76,7 @@ export default function Dashboard() {
     try {
       const formData = new FormData();
       formData.append('file', selectedFile);
+      formData.append('gl', selectedCountry);
 
       const response = await fetch('/api/process-csv', {
         method: 'POST',
@@ -116,7 +120,7 @@ export default function Dashboard() {
         },
       ]);
     }
-  }, [selectedFile]);
+  }, [selectedFile, selectedCountry]);
 
   const handleDownloadCSV = useCallback(() => {
     if (fullResultsData.length === 0) return;
@@ -227,10 +231,29 @@ dentists in manchester,Bright Smile,Manchester`;
 
           <div className="space-y-6">
             {state === 'idle' && (
-              <FileUploadZone
-                selectedFile={null}
-                onFileSelect={handleFileSelect}
-              />
+              <>
+                <div className="max-w-md mx-auto">
+                  <label className="block text-sm font-medium text-foreground mb-2">
+                    Select Country
+                  </label>
+                  <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {COUNTRIES.map((country) => (
+                        <SelectItem key={country.gl} value={country.gl}>
+                          {country.country}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <FileUploadZone
+                  selectedFile={null}
+                  onFileSelect={handleFileSelect}
+                />
+              </>
             )}
 
             {state === 'previewing' && selectedFile && (

@@ -40,7 +40,7 @@ interface ProcessingProgress {
   currentPage: number;
 }
 
-async function searchSerperPlaces(query: string, page: number = 1): Promise<any> {
+async function searchSerperPlaces(query: string, gl: string = "gb", page: number = 1): Promise<any> {
   const apiKey = process.env.SERPER_API_KEY;
   if (!apiKey) {
     throw new Error("SERPER_API_KEY not configured");
@@ -54,8 +54,7 @@ async function searchSerperPlaces(query: string, page: number = 1): Promise<any>
     },
     body: JSON.stringify({
       q: query,
-      location: "United Kingdom",
-      gl: "gb",
+      gl: gl,
       page,
     }),
   });
@@ -126,6 +125,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const csvContent = req.file.buffer.toString('utf-8');
+      const gl = req.body.gl || 'gb';
       const queryData = parseCSV(csvContent);
 
       if (queryData.length === 0) {
@@ -146,7 +146,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         let queryResultIndex = 1;
 
         while (true) {
-          const data = await searchSerperPlaces(query, page);
+          const data = await searchSerperPlaces(query, gl, page);
           totalApiCalls++;
 
           const places = data.places || [];
