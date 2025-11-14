@@ -161,7 +161,7 @@ export default function Dashboard() {
     const matches = fullResultsData.filter(r => r.brand_match);
     if (matches.length === 0) return;
     
-    const columnsToExclude = ['address', 'latitude', 'longitude', 'rating', 'ratingCount', 'category', 'phoneNumber', 'website', 'cid', 'brand', 'branch', 'brand_match', 'query_result_number', 'position'];
+    const columnsToExclude = ['address', 'latitude', 'longitude', 'rating', 'ratingCount', 'category', 'phoneNumber', 'website', 'cid', 'brand', 'branch', 'brand_match', 'position'];
     
     const allHeaders = Object.keys(matches[0]);
     const filteredHeaders = allHeaders.filter(h => !columnsToExclude.includes(h));
