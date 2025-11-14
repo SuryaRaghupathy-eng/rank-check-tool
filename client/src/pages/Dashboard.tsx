@@ -161,13 +161,17 @@ export default function Dashboard() {
     const matches = fullResultsData.filter(r => r.brand_match);
     if (matches.length === 0) return;
     
+    const columnsToExclude = ['address', 'latitude', 'longitude', 'rating', 'ratingCount', 'category', 'phoneNumber', 'website', 'cid'];
+    
     const allHeaders = Object.keys(matches[0]);
-    const headers = allHeaders.slice(1).join(',');
+    const filteredHeaders = allHeaders.filter(h => !columnsToExclude.includes(h));
+    const headers = filteredHeaders.join(',');
+    
     const rows = matches.map(row => {
-      const values = Object.values(row);
-      return values.slice(1).map(val => 
-        typeof val === 'string' && val.includes(',') ? `"${val}"` : val
-      ).join(',');
+      return filteredHeaders.map(header => {
+        const val = row[header];
+        return typeof val === 'string' && val.includes(',') ? `"${val}"` : val;
+      }).join(',');
     });
     const csv = [headers, ...rows].join('\n');
     
