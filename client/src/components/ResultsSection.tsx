@@ -32,21 +32,6 @@ export default function ResultsSection({
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex flex-wrap gap-4">
-          <div className="flex-1 min-w-[160px]">
-            <p className="text-sm text-muted-foreground mb-1">Queries Processed</p>
-            <p className="text-2xl font-semibold text-foreground" data-testid="text-queries-count">
-              {queriesProcessed}
-            </p>
-          </div>
-          <div className="flex-1 min-w-[160px]">
-            <p className="text-sm text-muted-foreground mb-1">Places Found</p>
-            <p className="text-2xl font-semibold text-foreground" data-testid="text-places-count">
-              {placesFound}
-            </p>
-          </div>
-        </div>
-
         <div>
           <h3 className="text-sm font-medium text-foreground mb-3">Download Results</h3>
           <div className="flex flex-wrap gap-3">

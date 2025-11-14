@@ -248,6 +248,16 @@ dentists in manchester,Bright Smile,Manchester`;
 
             {state === 'complete' && (
               <div className="space-y-6">
+                <div className="text-center">
+                  <Button
+                    variant="secondary"
+                    onClick={handleRemove}
+                    data-testid="button-process-another"
+                  >
+                    Process Another File
+                  </Button>
+                </div>
+
                 <ResultsSection
                   queriesProcessed={results.queries}
                   placesFound={results.places}
@@ -261,16 +271,6 @@ dentists in manchester,Bright Smile,Manchester`;
                     totalRows={fullResultsData.length}
                   />
                 )}
-                
-                <div className="text-center">
-                  <Button
-                    variant="secondary"
-                    onClick={handleRemove}
-                    data-testid="button-process-another"
-                  >
-                    Process Another File
-                  </Button>
-                </div>
               </div>
             )}
 
