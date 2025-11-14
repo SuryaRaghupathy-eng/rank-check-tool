@@ -49,7 +49,6 @@ export default function ResultsSection({
             )}
             {onProcessAnother && (
               <Button
-                variant="secondary"
                 onClick={onProcessAnother}
                 data-testid="button-process-another"
               >
