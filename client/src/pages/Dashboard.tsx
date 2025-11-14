@@ -243,7 +243,7 @@ dentists in manchester,Bright Smile,Manchester`;
                     <SelectContent>
                       {COUNTRIES.map((country) => (
                         <SelectItem key={country.gl} value={country.gl}>
-                          {country.country}
+                          {country.country} ({country.gl})
                         </SelectItem>
                       ))}
                     </SelectContent>
