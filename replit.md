@@ -8,15 +8,16 @@ The application is designed with a clean, productivity-focused interface inspire
 
 ## Recent Changes
 
-**November 15, 2025 - "Brand not found" Preview Enhancement:**
+**November 15, 2025 - "Brand not found" Preview & Download Enhancement:**
 - Updated results preview to show "Brand not found" for queries without any brand matches
-- When a query has no brand match (all brand_match values are false), the preview now displays:
+- When a query has no brand match (all brand_match values are false), it now displays:
   - Title: "Brand not found" (instead of showing position 1 non-matching result)
   - Query: The original search query used
   - Ranking Position: "N/A" (instead of showing position number)
 - Backend creates "Brand not found" entries with N/A ranking for queries without matches
 - Frontend preview logic prioritizes showing these N/A entries over regular non-matching results
-- Ensures users immediately know which queries didn't find their brand in search results
+- Both download options (All Data & Matches Only) now include "Brand not found" entries
+- Ensures users immediately know which queries didn't find their brand in both preview and downloads
 
 **November 15, 2025 - N/A Ranking Support & Language Selector:**
 - Added "N/A" display for queries without brand match rankings

@@ -193,14 +193,21 @@ export default function Dashboard() {
     
     for (const result of fullResultsData) {
       const queryKey = `${result.query}|${result.brand}|${result.branch}`;
+      const isNAEntry = result.title === 'Brand not found' && result.query_result_number === 'N/A';
       
       if (!queryMap.has(queryKey)) {
         queryMap.set(queryKey, result);
       } else {
         const existing = queryMap.get(queryKey);
-        if (result.brand_match && (!existing.brand_match || 
-            (result.query_result_number !== 'N/A' && existing.query_result_number !== 'N/A' && 
-             result.query_result_number < existing.query_result_number))) {
+        const existingIsNA = existing.title === 'Brand not found' && existing.query_result_number === 'N/A';
+        
+        if (result.brand_match) {
+          if (!existing.brand_match || 
+              (result.query_result_number !== 'N/A' && existing.query_result_number !== 'N/A' && 
+               result.query_result_number < existing.query_result_number)) {
+            queryMap.set(queryKey, result);
+          }
+        } else if (isNAEntry && !existing.brand_match) {
           queryMap.set(queryKey, result);
         }
       }
