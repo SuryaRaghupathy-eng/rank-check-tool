@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import multer from "multer";
 import Papa from "papaparse";
+import { WebSocketServer } from "ws";
 
 const upload = multer({ 
   storage: multer.memoryStorage(),
@@ -400,6 +401,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
+
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws/logs' });
+
+  const logClients = new Set<any>();
+
+  wss.on('connection', (ws) => {
+    console.log('Console log client connected');
+    logClients.add(ws);
+
+    ws.send(JSON.stringify({ 
+      type: 'log', 
+      message: 'Connected to console log stream',
+      timestamp: new Date().toISOString()
+    }));
+
+    ws.on('close', () => {
+      console.log('Console log client disconnected');
+      logClients.delete(ws);
+    });
+
+    ws.on('error', (error) => {
+      console.error('WebSocket error:', error);
+      logClients.delete(ws);
+    });
+  });
+
+  const originalConsoleLog = console.log;
+  const originalConsoleError = console.error;
+  const originalConsoleWarn = console.warn;
+
+  console.log = (...args: any[]) => {
+    originalConsoleLog(...args);
+    const message = args.map(arg => 
+      typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+    ).join(' ');
+    
+    logClients.forEach(client => {
+      if (client.readyState === 1) {
+        client.send(JSON.stringify({
+          type: 'log',
+          level: 'info',
+          message,
+          timestamp: new Date().toISOString()
+        }));
+      }
+    });
+  };
+
+  console.error = (...args: any[]) => {
+    originalConsoleError(...args);
+    const message = args.map(arg => 
+      typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+    ).join(' ');
+    
+    logClients.forEach(client => {
+      if (client.readyState === 1) {
+        client.send(JSON.stringify({
+          type: 'log',
+          level: 'error',
+          message,
+          timestamp: new Date().toISOString()
+        }));
+      }
+    });
+  };
+
+  console.warn = (...args: any[]) => {
+    originalConsoleWarn(...args);
+    const message = args.map(arg => 
+      typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+    ).join(' ');
+    
+    logClients.forEach(client => {
+      if (client.readyState === 1) {
+        client.send(JSON.stringify({
+          type: 'log',
+          level: 'warn',
+          message,
+          timestamp: new Date().toISOString()
+        }));
+      }
+    });
+  };
 
   return httpServer;
 }

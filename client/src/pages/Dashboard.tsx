@@ -7,6 +7,7 @@ import ResultsSection from '@/components/ResultsSection';
 import ResultsPreview from '@/components/ResultsPreview';
 import DetailedErrorCard from '@/components/DetailedErrorCard';
 import ProcessingHistory from '@/components/ProcessingHistory';
+import ConsoleOutput from '@/components/ConsoleOutput';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { COUNTRIES } from '@/lib/countries';
@@ -448,6 +449,10 @@ dentists in manchester,Bright Smile,Manchester`;
               </div>
             </>
           )}
+        </div>
+
+        <div className="mx-auto max-w-4xl px-4 py-6">
+          <ConsoleOutput />
         </div>
       </main>
     </div>
