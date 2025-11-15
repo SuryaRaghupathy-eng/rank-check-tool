@@ -29,9 +29,9 @@ export default function EnhancedProcessingStatus({ progress, stats }: EnhancedPr
     <Card data-testid="card-enhanced-processing">
       <CardContent className="pt-6">
         <div className="space-y-6">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col items-center justify-center gap-3">
             <Loader2 className="w-5 h-5 text-primary animate-spin" />
-            <div className="flex-1">
+            <div className="text-center">
               <p className="text-base font-medium text-foreground" data-testid="text-processing-message">
                 Processing your file...
               </p>
