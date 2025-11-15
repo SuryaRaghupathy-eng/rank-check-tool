@@ -85,7 +85,7 @@ export default function FileUploadZone({ onFileSelect, selectedFile, onRemove }:
 
   return (
     <div
-      className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
+      className={`border-2 border-dashed rounded-lg p-3 text-center transition-colors max-w-lg mx-auto ${
         isDragging
           ? 'border-primary bg-primary/5'
           : 'border-border bg-card hover-elevate'
@@ -97,8 +97,8 @@ export default function FileUploadZone({ onFileSelect, selectedFile, onRemove }:
       data-testid="dropzone-upload"
     >
       <div className="flex flex-col items-center gap-2">
-        <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
-          <Upload className="w-5 h-5 text-muted-foreground" />
+        <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
+          <Upload className="w-4 h-4 text-muted-foreground" />
         </div>
         <div className="space-y-0.5">
           <p className="text-sm font-medium text-foreground">
@@ -117,7 +117,7 @@ export default function FileUploadZone({ onFileSelect, selectedFile, onRemove }:
           data-testid="input-file"
         />
         <label htmlFor="file-upload">
-          <Button asChild data-testid="button-browse">
+          <Button asChild size="sm" data-testid="button-browse">
             <span>Upload File</span>
           </Button>
         </label>
