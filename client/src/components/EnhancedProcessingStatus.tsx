@@ -35,10 +35,9 @@ export default function EnhancedProcessingStatus({ progress, stats }: EnhancedPr
               <p className="text-base font-medium text-foreground" data-testid="text-processing-message">
                 Processing your file...
               </p>
-              {stats.currentQuery && (
-                <p className="text-sm text-muted-foreground mt-1" data-testid="text-current-query">
-                  Current: {stats.currentQuery}
-                  {stats.currentPage && ` (Page ${stats.currentPage})`}
+              {stats.totalQueries > 0 && (
+                <p className="text-sm text-muted-foreground mt-1" data-testid="text-query-counter">
+                  Processing query {stats.processedQueries} of {stats.totalQueries}
                 </p>
               )}
             </div>
