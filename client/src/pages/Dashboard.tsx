@@ -224,20 +224,20 @@ dentists in manchester,Bright Smile,Manchester`;
     <div className="min-h-screen bg-background">
       <DashboardHeader />
       
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="space-y-8">
-          <div className="text-center space-y-4">
-            <h2 className="text-3xl font-semibold text-foreground">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
+        <div className="space-y-5">
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl font-semibold text-foreground">
               Google Local Rank Checker
             </h2>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4">
             {state === 'idle' && (
               <>
-                <div className="max-w-md mx-auto space-y-4">
+                <div className="max-w-md mx-auto space-y-3">
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-1.5">
                       Select Country
                     </label>
                     <Select value={selectedCountry} onValueChange={setSelectedCountry}>
@@ -254,7 +254,7 @@ dentists in manchester,Bright Smile,Manchester`;
                     </Select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">
+                    <label className="block text-sm font-medium text-foreground mb-1.5">
                       Select Language
                     </label>
                     <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
@@ -333,8 +333,8 @@ dentists in manchester,Bright Smile,Manchester`;
                 />
               )}
               
-              <div className="text-center pt-6 border-t border-border">
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="text-center pt-4 border-t border-border">
+                <p className="text-sm text-muted-foreground mb-2">
                   Need a sample CSV file?
                 </p>
                 <Button

@@ -85,7 +85,7 @@ export default function FileUploadZone({ onFileSelect, selectedFile, onRemove }:
 
   return (
     <div
-      className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+      className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
         isDragging
           ? 'border-primary bg-primary/5'
           : 'border-border bg-card hover-elevate'
@@ -96,11 +96,11 @@ export default function FileUploadZone({ onFileSelect, selectedFile, onRemove }:
       onDrop={handleDrop}
       data-testid="dropzone-upload"
     >
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-          <Upload className="w-6 h-6 text-muted-foreground" />
+      <div className="flex flex-col items-center gap-2">
+        <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+          <Upload className="w-5 h-5 text-muted-foreground" />
         </div>
-        <div className="space-y-1">
+        <div className="space-y-0.5">
           <p className="text-sm font-medium text-foreground">
             Drop your CSV file here or click to browse
           </p>
