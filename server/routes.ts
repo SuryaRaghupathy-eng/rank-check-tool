@@ -146,6 +146,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         let page = 1;
         let queryResultIndex = 1;
+        let foundBrandMatch = false;
+        let foundAnyResults = false;
 
         while (true) {
           const data = await searchSerperPlaces(query, gl, hl, page);
@@ -154,11 +156,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const places = data.places || [];
           if (places.length === 0) break;
 
+          foundAnyResults = true;
+
           for (const place of places) {
             const title = place.title || '';
             const normTitle = title.toLowerCase().replace(/\s/g, '');
 
             const brandMatch = normTitle.includes(normBrand) && normTitle.includes(normBranch);
+
+            if (brandMatch) {
+              foundBrandMatch = true;
+            }
 
             allResults.push({
               ...place,
@@ -174,6 +182,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           page++;
           await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+        if (!foundBrandMatch) {
+          allResults.push({
+            title: 'N/A',
+            address: 'N/A',
+            rating: undefined,
+            category: 'N/A',
+            query,
+            brand,
+            branch,
+            query_result_number: 'N/A' as any,
+            brand_match: false,
+            local_ranking: 'N/A',
+          });
         }
       }
 

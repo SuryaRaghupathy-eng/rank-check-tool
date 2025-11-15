@@ -8,7 +8,12 @@ The application is designed with a clean, productivity-focused interface inspire
 
 ## Recent Changes
 
-**November 15, 2025 - Language Selector & Fresh GitHub Import Setup:**
+**November 15, 2025 - N/A Ranking Support & Language Selector:**
+- Added "N/A" display for queries without brand match rankings
+- All uploaded queries now appear in results, even if no brand match is found
+- Backend tracks brand matches and adds N/A entries for queries without results
+- Preview display shows all queries with best ranking or N/A
+- "Matches Only" download includes all queries grouped by best ranking (or N/A)
 - Added language dropdown selector with 192+ languages (ISO codes) for precise search results
 - Language parameter (hl) now passed to Serper API alongside country (gl) parameter
 - Created client/src/lib/languages.ts with comprehensive language data structure

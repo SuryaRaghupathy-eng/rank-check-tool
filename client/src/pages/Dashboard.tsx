@@ -101,7 +101,23 @@ export default function Dashboard() {
       });
       
       setFullResultsData(result.data.allPlaces);
-      setResultsData(result.data.brandMatches.slice(0, 100));
+      
+      const queryMap = new Map<string, any>();
+      for (const item of result.data.allPlaces) {
+        const queryKey = `${item.query}|${item.brand}|${item.branch}`;
+        if (!queryMap.has(queryKey)) {
+          queryMap.set(queryKey, item);
+        } else {
+          const existing = queryMap.get(queryKey);
+          if (item.brand_match && (!existing.brand_match || 
+              (item.query_result_number !== 'N/A' && existing.query_result_number !== 'N/A' && 
+               item.query_result_number < existing.query_result_number))) {
+            queryMap.set(queryKey, item);
+          }
+        }
+      }
+      
+      setResultsData(Array.from(queryMap.values()).slice(0, 100));
       
       setHistory(prev => [{
         id: Date.now().toString(),
@@ -165,7 +181,24 @@ export default function Dashboard() {
   const handleDownloadMatches = useCallback(() => {
     if (fullResultsData.length === 0) return;
     
-    const matches = fullResultsData.filter(r => r.brand_match);
+    const queryMap = new Map<string, any>();
+    
+    for (const result of fullResultsData) {
+      const queryKey = `${result.query}|${result.brand}|${result.branch}`;
+      
+      if (!queryMap.has(queryKey)) {
+        queryMap.set(queryKey, result);
+      } else {
+        const existing = queryMap.get(queryKey);
+        if (result.brand_match && (!existing.brand_match || 
+            (result.query_result_number !== 'N/A' && existing.query_result_number !== 'N/A' && 
+             result.query_result_number < existing.query_result_number))) {
+          queryMap.set(queryKey, result);
+        }
+      }
+    }
+    
+    const matches = Array.from(queryMap.values());
     if (matches.length === 0) return;
     
     const columnsToExclude = ['address', 'latitude', 'longitude', 'rating', 'ratingCount', 'category', 'phoneNumber', 'website', 'cid', 'brand', 'branch', 'brand_match', 'position'];
