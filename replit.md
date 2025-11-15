@@ -8,7 +8,12 @@ The application is designed with a clean, productivity-focused interface inspire
 
 ## Recent Changes
 
-**November 15, 2025 - Fresh GitHub Import & Complete Replit Setup:**
+**November 15, 2025 - Language Selector & Fresh GitHub Import Setup:**
+- Added language dropdown selector with 192+ languages (ISO codes) for precise search results
+- Language parameter (hl) now passed to Serper API alongside country (gl) parameter
+- Created client/src/lib/languages.ts with comprehensive language data structure
+- Updated Dashboard component to include language selection with default to English (en)
+- Backend routes.ts updated to accept and use language parameter in API calls
 - Successfully imported project from GitHub repository as a fresh clone
 - Installed all npm dependencies (492 packages)
 - Vite configuration already includes `allowedHosts: true` for Replit proxy compatibility
@@ -16,7 +21,7 @@ The application is designed with a clean, productivity-focused interface inspire
 - Configured development workflow (`npm run dev`) with webview output on port 5000
 - Requested and configured SERPER_API_KEY environment secret for Google Places API
 - Configured deployment for autoscale deployment target with build and run commands
-- Application fully tested and working: CSV upload interface loads correctly with "Google Local Rank Checker" UI
+- Application fully tested and working: CSV upload interface with country and language selectors
 - Database support available (Drizzle ORM + PostgreSQL schema defined) but currently using in-memory storage
 - Ready for production deployment with all Replit configurations in place
 

@@ -10,6 +10,7 @@ import ProcessingHistory from '@/components/ProcessingHistory';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { COUNTRIES } from '@/lib/countries';
+import { LANGUAGES } from '@/lib/languages';
 import logo from '@assets/images-removebg-preview_1762837081677.png';
 
 type ProcessingState = 'idle' | 'previewing' | 'processing' | 'complete' | 'error';
@@ -43,6 +44,7 @@ export default function Dashboard() {
   const [resultsData, setResultsData] = useState<any[]>([]);
   const [fullResultsData, setFullResultsData] = useState<any[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string>('gb');
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
 
   const handleFileSelect = useCallback((file: File) => {
     setSelectedFile(file);
@@ -77,6 +79,7 @@ export default function Dashboard() {
       const formData = new FormData();
       formData.append('file', selectedFile);
       formData.append('gl', selectedCountry);
+      formData.append('hl', selectedLanguage);
 
       const response = await fetch('/api/process-csv', {
         method: 'POST',
@@ -120,7 +123,7 @@ export default function Dashboard() {
         },
       ]);
     }
-  }, [selectedFile, selectedCountry]);
+  }, [selectedFile, selectedCountry, selectedLanguage]);
 
   const handleDownloadCSV = useCallback(() => {
     if (fullResultsData.length === 0) return;
@@ -232,22 +235,41 @@ dentists in manchester,Bright Smile,Manchester`;
           <div className="space-y-6">
             {state === 'idle' && (
               <>
-                <div className="max-w-md mx-auto">
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Select Country
-                  </label>
-                  <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a country" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {COUNTRIES.map((country) => (
-                        <SelectItem key={country.gl} value={country.gl}>
-                          {country.country} ({country.gl})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <div className="max-w-md mx-auto space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Select Country
+                    </label>
+                    <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a country" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {COUNTRIES.map((country) => (
+                          <SelectItem key={country.gl} value={country.gl}>
+                            {country.country} ({country.gl})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Select Language
+                    </label>
+                    <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a language" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {LANGUAGES.map((language) => (
+                          <SelectItem key={language.hl} value={language.hl}>
+                            {language.language} ({language.hl})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
                 <FileUploadZone
                   selectedFile={null}
