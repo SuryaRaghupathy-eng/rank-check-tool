@@ -451,9 +451,11 @@ dentists in manchester,Bright Smile,Manchester`;
           )}
         </div>
 
-        <div className="mx-auto max-w-4xl px-4 py-6">
-          <ConsoleOutput />
-        </div>
+        {state === 'processing' && (
+          <div className="mx-auto max-w-4xl px-4 py-6">
+            <ConsoleOutput />
+          </div>
+        )}
       </main>
     </div>
   );
