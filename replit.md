@@ -8,6 +8,13 @@ The application is designed with a clean, productivity-focused interface inspire
 
 ## Recent Changes
 
+**November 15, 2025 - Fixed SSE Progress Tracking:**
+- Fixed Server-Sent Events (SSE) streaming to properly display real-time progress
+- Added `res.flushHeaders()` to ensure browser immediately recognizes streaming response
+- Added initial progress event (0 / N queries) sent immediately when processing starts
+- Frontend now correctly receives and displays live progress updates during CSV processing
+- Progress bar updates show current query, queries processed, queries per second, and estimated time remaining
+
 **November 15, 2025 - Fresh GitHub Import to Replit:**
 - Successfully imported project from GitHub as a fresh clone
 - Installed all npm dependencies (492 packages)

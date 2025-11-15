@@ -137,6 +137,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
+      res.flushHeaders();
 
       const sendProgress = (data: any) => {
         res.write(`data: ${JSON.stringify(data)}\n\n`);
@@ -145,6 +146,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const allResults: PlaceResult[] = [];
       let totalApiCalls = 0;
       const startTime = Date.now();
+
+      sendProgress({
+        type: 'progress',
+        currentQuery: 'Starting...',
+        totalQueries: queryData.length,
+        processedQueries: 0,
+        queriesPerSecond: 0,
+        estimatedTimeRemaining: 0,
+        apiCallsMade: 0,
+        currentPage: 1,
+        progress: 0,
+      });
 
       for (let i = 0; i < queryData.length; i++) {
         const { Keywords: query, Brand: brand, Branch: branch } = queryData[i];
