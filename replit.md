@@ -11,9 +11,13 @@ The application is designed with a clean, productivity-focused interface inspire
 **November 15, 2025 - Fixed SSE Progress Tracking:**
 - Fixed Server-Sent Events (SSE) streaming to properly display real-time progress
 - Added `res.flushHeaders()` to ensure browser immediately recognizes streaming response
+- Added `req.socket.setNoDelay(true)` to disable TCP buffering (Nagle's algorithm)
+- Added `req.socket.setTimeout(0)` to prevent socket timeouts during long processing
+- Added `X-Accel-Buffering: no` header to disable proxy buffering
 - Added initial progress event (0 / N queries) sent immediately when processing starts
 - Frontend now correctly receives and displays live progress updates during CSV processing
 - Progress bar updates show current query, queries processed, queries per second, and estimated time remaining
+- Each keyword's progress now appears immediately after it's processed, not at the end
 
 **November 15, 2025 - Fresh GitHub Import to Replit:**
 - Successfully imported project from GitHub as a fresh clone

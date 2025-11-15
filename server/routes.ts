@@ -137,6 +137,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.setHeader('Content-Type', 'text/event-stream');
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('Connection', 'keep-alive');
+      res.setHeader('X-Accel-Buffering', 'no');
+      
+      if (req.socket) {
+        req.socket.setNoDelay(true);
+        req.socket.setTimeout(0);
+      }
+      
       res.flushHeaders();
 
       const sendProgress = (data: any) => {
