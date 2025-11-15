@@ -141,6 +141,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       for (let i = 0; i < queryData.length; i++) {
         const { Keywords: query, Brand: brand, Branch: branch } = queryData[i];
         
+        console.log(`Processing query ${i + 1}/${queryData.length}: "${query}" for brand "${brand}" - "${branch}"`);
+        
         const normBrand = normalizeBrandName(brand);
         const normBranch = normalizeBranchName(branch);
 
@@ -166,6 +168,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
             if (brandMatch) {
               foundBrandMatch = true;
+              console.log(`  ✓ Brand match found at position ${queryResultIndex}: "${title}"`);
             }
 
             allResults.push({
@@ -185,6 +188,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
 
         if (!foundBrandMatch) {
+          console.log(`  ✗ No brand match found for "${query}" - adding N/A entry`);
           allResults.push({
             title: 'N/A',
             address: 'N/A',
