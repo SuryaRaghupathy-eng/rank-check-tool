@@ -43,15 +43,6 @@ export default function EnhancedProcessingStatus({ progress, stats }: EnhancedPr
               )}
             </div>
           </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Progress</span>
-              <span className="font-medium text-foreground" data-testid="text-progress-fraction">
-                {stats.processedQueries} / {stats.totalQueries} queries
-              </span>
-            </div>
-          </div>
         </div>
       </CardContent>
     </Card>
