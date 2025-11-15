@@ -52,7 +52,9 @@ export default function Dashboard() {
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target?.result as string;
-      const rows = text.split('\n').slice(0, 6).map(row => row.split(','));
+      const rows = text.split('\n')
+        .filter(row => row.trim())
+        .map(row => row.split(','));
       setPreviewData(rows);
       setState('previewing');
     };

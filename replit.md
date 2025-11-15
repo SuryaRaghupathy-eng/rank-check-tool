@@ -8,6 +8,16 @@ The application is designed with a clean, productivity-focused interface inspire
 
 ## Recent Changes
 
+**November 15, 2025 - Enhanced File Upload Preview:**
+- CSV file preview now shows ALL uploaded data instead of just first 5 rows
+- Added "Show More" / "Show Less" toggle button for expandable preview
+  - Initially shows first 5 keywords for quick overview
+  - Click "Show More" to expand and view all uploaded keywords
+  - Shows count of remaining keywords (e.g., "Show More (45 more)")
+- Added keyword count display showing total number of keywords uploaded
+- Preview automatically filters empty rows for cleaner display
+- Maximum preview height set to prevent overwhelming UI with large files
+
 **November 15, 2025 - "Brand not found" Preview & Download Enhancement:**
 - Updated results preview to show "Brand not found" for queries without any brand matches
 - When a query has no brand match (all brand_match values are false), it now displays:

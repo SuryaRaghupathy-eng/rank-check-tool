@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -8,7 +9,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { FileText } from 'lucide-react';
+import { FileText, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface FilePreviewCardProps {
   fileName: string;
@@ -27,6 +28,12 @@ export default function FilePreviewCard({
   onRemove,
   isProcessing = false,
 }: FilePreviewCardProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  const totalKeywords = previewData.length > 0 ? previewData.length - 1 : 0;
+  const displayData = isExpanded ? previewData.slice(1) : previewData.slice(1, 6);
+  const hasMoreData = totalKeywords > 5;
+
   return (
     <Card data-testid="card-file-preview">
       <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0 pb-4">
@@ -44,8 +51,13 @@ export default function FilePreviewCard({
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
-          <h3 className="text-sm font-medium text-foreground mb-3">Preview</h3>
-          <div className="border border-border rounded-md overflow-auto max-h-64">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-medium text-foreground">Preview</h3>
+            <p className="text-sm text-muted-foreground">
+              {totalKeywords} {totalKeywords === 1 ? 'keyword' : 'keywords'} uploaded
+            </p>
+          </div>
+          <div className="border border-border rounded-md overflow-auto max-h-96">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -57,7 +69,7 @@ export default function FilePreviewCard({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {previewData.slice(1, 6).map((row, i) => (
+                {displayData.map((row, i) => (
                   <TableRow key={i}>
                     {row.map((cell, j) => (
                       <TableCell key={j} className="font-mono text-sm">
@@ -69,6 +81,27 @@ export default function FilePreviewCard({
               </TableBody>
             </Table>
           </div>
+          {hasMoreData && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="mt-2 w-full"
+              data-testid="button-toggle-preview"
+            >
+              {isExpanded ? (
+                <>
+                  <ChevronUp className="w-4 h-4 mr-1" />
+                  Show Less
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="w-4 h-4 mr-1" />
+                  Show More ({totalKeywords - 5} more)
+                </>
+              )}
+            </Button>
+          )}
         </div>
         <div className="flex flex-wrap gap-3">
           <Button
