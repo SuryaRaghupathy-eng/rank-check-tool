@@ -122,6 +122,7 @@ export default function Dashboard() {
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             const data = JSON.parse(line.slice(6));
+            console.log('[SSE Received]:', data.type, data.processedQueries, '/', data.totalQueries);
 
             if (data.type === 'progress') {
               setProgress(data.progress);

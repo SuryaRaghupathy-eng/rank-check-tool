@@ -140,7 +140,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.flushHeaders();
 
       const sendProgress = (data: any) => {
-        res.write(`data: ${JSON.stringify(data)}\n\n`);
+        const message = `data: ${JSON.stringify(data)}\n\n`;
+        console.log('[SSE] Sending:', data.type, data.processedQueries || 0, '/', data.totalQueries || 0);
+        res.write(message);
       };
 
       const allResults: PlaceResult[] = [];
