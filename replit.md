@@ -8,6 +8,21 @@ The application is designed with a clean, productivity-focused interface inspire
 
 ## Recent Changes
 
+**November 15, 2025 - Real-Time Progress Tracking:**
+- Added Server-Sent Events (SSE) streaming endpoint `/api/process-csv-stream` for real-time progress updates
+- Processing status now shows exactly which keyword is being processed (e.g., "Processing 3 out of 10")
+- Live updates include:
+  - Current keyword being searched
+  - Number of keywords processed vs total (e.g., "3 / 10 queries")
+  - Processing speed (queries per second)
+  - Estimated time remaining
+  - Current page being fetched from Google Places API
+  - Total API calls made
+- Progress bar updates in real-time as each keyword is processed
+- Frontend uses streaming fetch API to consume SSE events and update UI instantly
+- Backend sends progress updates before and after each keyword search
+- Maintained backward compatibility with old `/api/process-csv` endpoint
+
 **November 15, 2025 - Enhanced File Upload Preview:**
 - CSV file preview now shows ALL uploaded data instead of just first 5 rows
 - Added "Show More" / "Show Less" toggle button for expandable preview

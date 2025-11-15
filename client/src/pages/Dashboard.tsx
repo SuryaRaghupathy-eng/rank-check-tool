@@ -76,6 +76,15 @@ export default function Dashboard() {
 
     setState('processing');
     setProgress(0);
+    setProcessingStats({
+      currentQuery: '',
+      totalQueries: 0,
+      processedQueries: 0,
+      queriesPerSecond: 0,
+      estimatedTimeRemaining: 0,
+      apiCallsMade: 0,
+      currentPage: 1,
+    });
     
     try {
       const formData = new FormData();
@@ -83,60 +92,97 @@ export default function Dashboard() {
       formData.append('gl', selectedCountry);
       formData.append('hl', selectedLanguage);
 
-      const response = await fetch('/api/process-csv', {
+      const response = await fetch('/api/process-csv-stream', {
         method: 'POST',
         body: formData,
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `Server error: ${response.status}`);
+        throw new Error(`Server error: ${response.status}`);
       }
 
-      const result = await response.json();
-      
-      setState('complete');
-      setProgress(100);
-      setResults({
-        queries: result.data.stats.queriesProcessed,
-        places: result.data.stats.placesFound,
-      });
-      
-      setFullResultsData(result.data.allPlaces);
-      
-      const queryMap = new Map<string, any>();
-      for (const item of result.data.allPlaces) {
-        const queryKey = `${item.query}|${item.brand}|${item.branch}`;
-        const isNAEntry = item.title === 'Brand not found' && item.query_result_number === 'N/A';
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (!reader) {
+        throw new Error('Failed to get response reader');
+      }
+
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
         
-        if (!queryMap.has(queryKey)) {
-          queryMap.set(queryKey, item);
-        } else {
-          const existing = queryMap.get(queryKey);
-          const existingIsNA = existing.title === 'Brand not found' && existing.query_result_number === 'N/A';
-          
-          if (item.brand_match) {
-            if (!existing.brand_match || 
-                (item.query_result_number !== 'N/A' && existing.query_result_number !== 'N/A' && 
-                 item.query_result_number < existing.query_result_number)) {
-              queryMap.set(queryKey, item);
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = JSON.parse(line.slice(6));
+
+            if (data.type === 'progress') {
+              setProgress(data.progress);
+              setProcessingStats({
+                currentQuery: data.currentQuery,
+                totalQueries: data.totalQueries,
+                processedQueries: data.processedQueries,
+                queriesPerSecond: data.queriesPerSecond,
+                estimatedTimeRemaining: data.estimatedTimeRemaining,
+                apiCallsMade: data.apiCallsMade,
+                currentPage: data.currentPage,
+              });
+            } else if (data.type === 'complete') {
+              setState('complete');
+              setProgress(100);
+              setResults({
+                queries: data.data.stats.queriesProcessed,
+                places: data.data.stats.placesFound,
+              });
+              
+              setFullResultsData(data.data.allPlaces);
+              
+              const queryMap = new Map<string, any>();
+              for (const item of data.data.allPlaces) {
+                const queryKey = `${item.query}|${item.brand}|${item.branch}`;
+                const isNAEntry = item.title === 'Brand not found' && item.query_result_number === 'N/A';
+                
+                if (!queryMap.has(queryKey)) {
+                  queryMap.set(queryKey, item);
+                } else {
+                  const existing = queryMap.get(queryKey);
+                  const existingIsNA = existing.title === 'Brand not found' && existing.query_result_number === 'N/A';
+                  
+                  if (item.brand_match) {
+                    if (!existing.brand_match || 
+                        (item.query_result_number !== 'N/A' && existing.query_result_number !== 'N/A' && 
+                         item.query_result_number < existing.query_result_number)) {
+                      queryMap.set(queryKey, item);
+                    }
+                  } else if (isNAEntry && !existing.brand_match) {
+                    queryMap.set(queryKey, item);
+                  }
+                }
+              }
+              
+              setResultsData(Array.from(queryMap.values()).slice(0, 100));
+              
+              setHistory(prev => [{
+                id: Date.now().toString(),
+                fileName: selectedFile.name,
+                processedAt: new Date(),
+                status: 'completed',
+                queriesProcessed: data.data.stats.queriesProcessed,
+                placesFound: data.data.stats.placesFound,
+              }, ...prev.slice(0, 9)]);
+            } else if (data.type === 'error') {
+              throw new Error(data.error);
             }
-          } else if (isNAEntry && !existing.brand_match) {
-            queryMap.set(queryKey, item);
           }
         }
       }
-      
-      setResultsData(Array.from(queryMap.values()).slice(0, 100));
-      
-      setHistory(prev => [{
-        id: Date.now().toString(),
-        fileName: selectedFile.name,
-        processedAt: new Date(),
-        status: 'completed',
-        queriesProcessed: result.data.stats.queriesProcessed,
-        placesFound: result.data.stats.placesFound,
-      }, ...prev.slice(0, 9)]);
       
     } catch (error: any) {
       console.error('Processing error:', error);

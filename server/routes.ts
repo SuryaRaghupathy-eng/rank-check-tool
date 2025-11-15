@@ -119,6 +119,156 @@ function normalizeBranchName(text: string): string {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  app.post("/api/process-csv-stream", upload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+
+      const csvContent = req.file.buffer.toString('utf-8');
+      const gl = req.body.gl || 'gb';
+      const hl = req.body.hl || 'en';
+      const queryData = parseCSV(csvContent);
+
+      if (queryData.length === 0) {
+        return res.status(400).json({ error: "No valid data rows found in CSV" });
+      }
+
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+
+      const sendProgress = (data: any) => {
+        res.write(`data: ${JSON.stringify(data)}\n\n`);
+      };
+
+      const allResults: PlaceResult[] = [];
+      let totalApiCalls = 0;
+      const startTime = Date.now();
+
+      for (let i = 0; i < queryData.length; i++) {
+        const { Keywords: query, Brand: brand, Branch: branch } = queryData[i];
+        
+        console.log(`Processing query ${i + 1}/${queryData.length}: "${query}" for brand "${brand}" - "${branch}"`);
+        
+        const elapsed = (Date.now() - startTime) / 1000;
+        const qps = i > 0 ? i / elapsed : 0;
+        const remaining = i > 0 ? Math.ceil((queryData.length - i) / qps) : 0;
+
+        sendProgress({
+          type: 'progress',
+          currentQuery: query,
+          totalQueries: queryData.length,
+          processedQueries: i + 1,
+          queriesPerSecond: Number(qps.toFixed(2)),
+          estimatedTimeRemaining: remaining,
+          apiCallsMade: totalApiCalls,
+          currentPage: 1,
+          progress: Math.round(((i + 1) / queryData.length) * 100),
+        });
+
+        const normBrand = normalizeBrandName(brand);
+        const normBranch = normalizeBranchName(branch);
+
+        let page = 1;
+        let queryResultIndex = 1;
+        let foundBrandMatch = false;
+        let foundAnyResults = false;
+
+        while (true) {
+          const data = await searchSerperPlaces(query, gl, hl, page);
+          totalApiCalls++;
+
+          const places = data.places || [];
+          if (places.length === 0) break;
+
+          foundAnyResults = true;
+
+          for (const place of places) {
+            const title = place.title || '';
+            const normTitle = title.toLowerCase().replace(/\s/g, '');
+
+            const brandMatch = normTitle.includes(normBrand) && normTitle.includes(normBranch);
+
+            if (brandMatch) {
+              foundBrandMatch = true;
+              console.log(`  ✓ Brand match found at position ${queryResultIndex}: "${title}"`);
+            }
+
+            allResults.push({
+              ...place,
+              query,
+              brand,
+              branch,
+              query_result_number: queryResultIndex,
+              brand_match: brandMatch,
+            });
+
+            queryResultIndex++;
+          }
+
+          page++;
+          
+          const elapsedNow = (Date.now() - startTime) / 1000;
+          const qpsNow = (i + 1) / elapsedNow;
+          const remainingNow = Math.ceil((queryData.length - (i + 1)) / qpsNow);
+
+          sendProgress({
+            type: 'progress',
+            currentQuery: query,
+            totalQueries: queryData.length,
+            processedQueries: i + 1,
+            queriesPerSecond: Number(qpsNow.toFixed(2)),
+            estimatedTimeRemaining: remainingNow,
+            apiCallsMade: totalApiCalls,
+            currentPage: page,
+            progress: Math.round(((i + 1) / queryData.length) * 100),
+          });
+
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+
+        if (!foundBrandMatch) {
+          console.log(`  ✗ No brand match found for "${query}" - adding N/A entry`);
+          allResults.push({
+            title: 'Brand not found',
+            address: 'N/A',
+            rating: undefined,
+            category: 'N/A',
+            query,
+            brand,
+            branch,
+            query_result_number: 'N/A' as any,
+            brand_match: false,
+            local_ranking: 'N/A',
+          });
+        }
+      }
+
+      const processingTime = (Date.now() - startTime) / 1000;
+
+      sendProgress({
+        type: 'complete',
+        data: {
+          allPlaces: allResults,
+          brandMatches: allResults.filter(r => r.brand_match),
+          stats: {
+            queriesProcessed: queryData.length,
+            placesFound: allResults.length,
+            apiCallsMade: totalApiCalls,
+            processingTimeSeconds: processingTime,
+          },
+        },
+      });
+
+      res.end();
+    } catch (error: any) {
+      console.error("CSV processing error:", error);
+      res.write(`data: ${JSON.stringify({ type: 'error', error: error.message || "Failed to process CSV file" })}\n\n`);
+      res.end();
+    }
+  });
+
   app.post("/api/process-csv", upload.single('file'), async (req, res) => {
     try {
       if (!req.file) {
