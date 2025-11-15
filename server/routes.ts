@@ -90,7 +90,7 @@ function parseCSV(content: string): QueryRow[] {
   const hasBranch = 'Branch' in firstRow || 'branch' in firstRow;
 
   if (!hasKeywords || !hasBrand || !hasBranch) {
-    throw new Error("CSV must contain 'Keywords', 'Brand', and 'Branch(enter the brand name if there are no specific branch)' columns");
+    throw new Error("CSV must contain 'Keywords', 'Brand', and 'Branch' columns");
   }
 
   const rows: QueryRow[] = [];
