@@ -105,13 +105,21 @@ export default function Dashboard() {
       const queryMap = new Map<string, any>();
       for (const item of result.data.allPlaces) {
         const queryKey = `${item.query}|${item.brand}|${item.branch}`;
+        const isNAEntry = item.title === 'Brand not found' && item.query_result_number === 'N/A';
+        
         if (!queryMap.has(queryKey)) {
           queryMap.set(queryKey, item);
         } else {
           const existing = queryMap.get(queryKey);
-          if (item.brand_match && (!existing.brand_match || 
-              (item.query_result_number !== 'N/A' && existing.query_result_number !== 'N/A' && 
-               item.query_result_number < existing.query_result_number))) {
+          const existingIsNA = existing.title === 'Brand not found' && existing.query_result_number === 'N/A';
+          
+          if (item.brand_match) {
+            if (!existing.brand_match || 
+                (item.query_result_number !== 'N/A' && existing.query_result_number !== 'N/A' && 
+                 item.query_result_number < existing.query_result_number)) {
+              queryMap.set(queryKey, item);
+            }
+          } else if (isNAEntry && !existing.brand_match) {
             queryMap.set(queryKey, item);
           }
         }

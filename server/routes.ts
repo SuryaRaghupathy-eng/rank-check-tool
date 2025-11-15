@@ -190,7 +190,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (!foundBrandMatch) {
           console.log(`  ✗ No brand match found for "${query}" - adding N/A entry`);
           allResults.push({
-            title: 'N/A',
+            title: 'Brand not found',
             address: 'N/A',
             rating: undefined,
             category: 'N/A',
