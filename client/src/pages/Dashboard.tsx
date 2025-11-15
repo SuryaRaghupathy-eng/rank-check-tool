@@ -74,6 +74,7 @@ export default function Dashboard() {
   const handleProcess = useCallback(async () => {
     if (!selectedFile) return;
 
+    console.log('[UPLOAD] Starting CSV processing...');
     setState('processing');
     setProgress(0);
     setProcessingStats({
@@ -92,10 +93,12 @@ export default function Dashboard() {
       formData.append('gl', selectedCountry);
       formData.append('hl', selectedLanguage);
 
+      console.log('[UPLOAD] Sending request to /api/process-csv-stream');
       const response = await fetch('/api/process-csv-stream', {
         method: 'POST',
         body: formData,
       });
+      console.log('[UPLOAD] Response received, status:', response.status);
 
       if (!response.ok) {
         throw new Error(`Server error: ${response.status}`);
