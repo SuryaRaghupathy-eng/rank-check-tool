@@ -307,7 +307,7 @@ export default function Dashboard() {
   }, []);
 
   const handleDownloadSample = useCallback(() => {
-    const sampleCSV = `Keywords,Brand,Branch
+    const sampleCSV = `Keywords,Brand,Branch(enter the brand name if there are no specific branch)
 estate agents in belfast,Property People,Belfast
 lawyers in london,Smith & Co,London
 dentists in manchester,Bright Smile,Manchester`;
