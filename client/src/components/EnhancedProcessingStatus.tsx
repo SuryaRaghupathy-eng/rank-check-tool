@@ -51,10 +51,6 @@ export default function EnhancedProcessingStatus({ progress, stats }: EnhancedPr
                 {stats.processedQueries} / {stats.totalQueries} queries
               </span>
             </div>
-            <Progress value={progress} className="h-2" data-testid="progress-bar-enhanced" />
-            <p className="text-sm text-muted-foreground text-right" data-testid="text-progress-percent">
-              {progress}%
-            </p>
           </div>
         </div>
       </CardContent>
