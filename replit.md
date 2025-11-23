@@ -8,6 +8,26 @@ The application is designed with a clean, productivity-focused interface inspire
 
 ## Recent Changes
 
+**November 23, 2025 - Fixed CSV Export Alignment Issues:**
+- Fixed CSV export misalignment issue where cell values would shift into empty cells
+- Replaced manual CSV generation with Papa.unparse() for proper CSV formatting
+- All exported CSV files now properly quote values and handle empty cells correctly
+- Fixed both "Download All Data (CSV)" and "Download Matches Only (CSV)" functions
+- Empty cells now remain empty instead of having next column values shift into them
+- Proper handling of special characters (commas, quotes, newlines) in exported data
+- Ensures perfect column alignment in Excel, Google Sheets, and other spreadsheet applications
+
+**November 23, 2025 - Replit Environment Setup Completed:**
+- Successfully set up GitHub import in Replit environment
+- Installed all 492 npm dependencies
+- Configured SERPER_API_KEY environment secret for Google Places API integration
+- Created development workflow running `npm run dev` on port 5000 with webview output
+- Configured autoscale deployment with build (`npm run build`) and run (`npm run start`) commands
+- Verified application fully functional: CSV upload interface, country/language selectors, theme toggle
+- Vite configuration already optimized for Replit proxy with `allowedHosts: true` and HMR settings
+- Server configured to bind to 0.0.0.0:5000 for frontend access
+- All existing features working: real-time SSE progress tracking, brand matching, file previews, downloads
+
 **November 15, 2025 - Replit Environment Setup Completed:**
 - Successfully set up GitHub import in Replit environment
 - Installed all 492 npm dependencies

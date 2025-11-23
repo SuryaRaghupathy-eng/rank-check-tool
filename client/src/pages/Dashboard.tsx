@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import Papa from 'papaparse';
 import DashboardHeader from '@/components/DashboardHeader';
 import FileUploadZone from '@/components/FileUploadZone';
 import FilePreviewCard from '@/components/FilePreviewCard';
@@ -205,13 +206,11 @@ export default function Dashboard() {
   const handleDownloadCSV = useCallback(() => {
     if (fullResultsData.length === 0) return;
     
-    const headers = Object.keys(fullResultsData[0]).join(',');
-    const rows = fullResultsData.map(row => 
-      Object.values(row).map(val => 
-        typeof val === 'string' && val.includes(',') ? `"${val}"` : val
-      ).join(',')
-    );
-    const csv = [headers, ...rows].join('\n');
+    const csv = Papa.unparse(fullResultsData, {
+      quotes: true,
+      header: true,
+      skipEmptyLines: false,
+    });
     
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -271,20 +270,22 @@ export default function Dashboard() {
     
     const columnsToExclude = ['address', 'latitude', 'longitude', 'rating', 'ratingCount', 'category', 'phoneNumber', 'website', 'cid', 'brand', 'branch', 'brand_match', 'position'];
     
-    const allHeaders = Object.keys(matches[0]);
-    const filteredHeaders = allHeaders.filter(h => !columnsToExclude.includes(h));
-    
-    const displayHeaders = filteredHeaders.map(h => 
-      h === 'query_result_number' ? 'local_ranking' : h
-    ).join(',');
-    
-    const rows = matches.map(row => {
-      return filteredHeaders.map(header => {
-        const val = row[header];
-        return typeof val === 'string' && val.includes(',') ? `"${val}"` : val;
-      }).join(',');
+    const filteredData = matches.map(row => {
+      const filteredRow: any = {};
+      for (const key in row) {
+        if (!columnsToExclude.includes(key)) {
+          const displayKey = key === 'query_result_number' ? 'local_ranking' : key;
+          filteredRow[displayKey] = row[key];
+        }
+      }
+      return filteredRow;
     });
-    const csv = [displayHeaders, ...rows].join('\n');
+    
+    const csv = Papa.unparse(filteredData, {
+      quotes: true,
+      header: true,
+      skipEmptyLines: false,
+    });
     
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
